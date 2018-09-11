@@ -33,15 +33,49 @@ static NSString * const kTableViewCellReusedID = @"kTableViewCellReusedID";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    [self init_ECG_SDK];
-    [self setUpUI];
     
-}
+    /** 传参: 手机号 + 年龄 + 性别 */
+//    [JSECGOAuth js_registerECG_SDK: @"18600699320"
+//                               age: @"29"
+//                            gender: AUKOGenderMale
+//                          delegate: self
+//                         debugMode: YES
+//                          callBack: ^(BOOL result, NSString * _Nonnull msg) {
+//        if (result) {
+//            // 授权成功, 界面展示
+//            NSLog(@" 授权成功, 界面展示");
+//            return ;
+//        }
+//        NSLog(@" AUKO_ECG_SDK 授权失败: %@",msg);
+//
+//    }];
 
-- (void)init_ECG_SDK {
-    JSBluetoothManager.sharedCentralBLEManager.delegate = self;
+    /** 传参: 手机号 + 生日 + 性别 */
+    [JSECGOAuth js_registerECG_SDK: @"18600699320"
+                          birthday: @"2017-01-01"
+                            gender: AUKOGenderMale
+                          delegate: self
+                         debugMode: YES
+                          callBack: ^(BOOL result, NSString * _Nonnull msg) {
+      if (result) {
+          // 授权成功, 界面展示
+          NSLog(@" 授权成功, 界面展示");
+          
+          NSData *userData = [[NSUserDefaults standardUserDefaults] objectForKey:@"AukoUserData"];
+          if (userData == nil) return;
+          id userModel = [NSKeyedUnarchiver unarchiveObjectWithData:userData];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+          NSLog(@"%@",[userModel performSelector:@selector(aukoUserID)]);
+#pragma clang diagnostic pop
+      }
+      NSLog(@" AUKO_ECG_SDK 授权失败: %@",msg);
+    }];
+    
+    
+    
+    [self setUpUI];
 }
-
 
 #pragma mark - UI
 
